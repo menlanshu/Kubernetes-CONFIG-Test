@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app: nginx
+    # connection with deployments or its pods
+  port: ...
