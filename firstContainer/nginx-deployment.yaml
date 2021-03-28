@@ -17,3 +17,11 @@ spec:
         image: nginx:1.8
         ports:
         - containerPort: 80
+        volumeMounts:
+        - mountPath: "/test-pd"
+          name: nginx-vol
+      volumes:
+      - name: nginx-vol
+        hostPath:
+          path: "/home/k8s1/test"
+        #emptyDir: {}

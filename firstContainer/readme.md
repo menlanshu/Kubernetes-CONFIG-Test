@@ -48,3 +48,7 @@ kubectl describe pod podname
 you can use kubectl replace -f nginx-deployment.yaml
 And you can use kubectl apply -f nginx-deployment.yaml
 it's the advantage of declaration API, you do not need care about the action: create or update
+
+# volume test
+emptyDir or hostPath to config volume path
+kubectl exec -it podname -- /bin/sh
