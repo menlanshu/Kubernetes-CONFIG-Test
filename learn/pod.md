@@ -113,3 +113,20 @@ And we create a sidecar container, declare the same volume mounted to its own /v
 (design pattern)[https://www.usenix.org/conference/hotcloud16/workshop-program/presentation/burns]
 
 Process Group concept is very very important!
+
+# nodeselector
+choose the node you want to deploy your pod
+
+# nodename
+set by scheduler
+if the value is settled, then k8s think it's scheduled already
+but user can use nodename tobcheat k8s
+
+# hostalias
+spec:
+  hostAliases:
+  - ip: "10.1.2.3"
+    hostnames:
+    - "foo.remote"
+    - "bar.remote"
+it actually change the host config in pod

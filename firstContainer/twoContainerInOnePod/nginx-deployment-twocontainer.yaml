@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment-two
+spec:
+  selector:
+    matchLabels:
+      app: nginx-two
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx-two
+    spec:
+      shareProcessNamespace: true
+      containers:
+      - name: nginx
+        image: nginx
+      - name: shell
+        image: busybox
+        stdin: true
+        tty: true
