@@ -133,5 +133,95 @@ kubectl exec -it test-projected-volume -- /bin/sh
 - example of configmap in configmap folder
 $ kubectl create configmap ui-config --from-file=ui.properties
 3. Download API
+> Function: Let all containers in this pod can access POD API object info
 4. ServiceAccountToken
+A build-in service account in kubernetes
+It can assign privilge according object
+Example:
+Service Account A: only allow to do get opr for Kubernetes API
+Service Account B: allow to do all oprs
 
+explainations: service account is a special type of secret
+**Kubenertes provide a default service account**
+So in a running pod of Kubernetes, you can use this service account directly, and no need to mount it explicitly
+
+The position of serice account in kubernertes container is fixed:
+path: /var/run/secrects/kubernetes.io/serviceaccount
+files: ca.crt namespace token
+
+# container health check and recover mechanism
+1. you can define a probe instead of default interface of docker to detect status of a container
+an example of kubernetes document:
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    test: liveness
+  name: test-liveness-exec
+spec:
+  containers:
+  - name: liveness
+    image: busybox
+    args:
+    - /bin/sh
+    - -c
+    - touch /tmp/healthy; sleep 30; rm -rf /tmp/healthy; sleep 600
+    livenessProbe:
+      exec:
+        command:
+        - cat
+        - /temp/healthy
+      initialDelaySeconds: 5
+      periodSeconds: 5
+if you create a pod instead of a deployment
+**The pod will not leave current node, even if the node died!**
+
+2. you can use restartPoloty to change recover policy of pod
+- Always: restart container once it's not in running status
+- OnFailure: On when container is abnormal, restart container
+- Never: Never restart container
+
+3. many other ways to use probe to monitor status of pod
+- livenessProbe:
+    httpGet:
+      path: /healthz
+      port: 8080
+      httpHeaders:
+      - name: X-Custom-Header
+        value: Awesome
+      initialDelaySeconds: 3
+      periodSeconds: 3
+- livenessProbe:
+    tcpSocket:
+      port: 8080
+    initialDelaySeconds: 15
+    periodSeconds: 20
+> in this way, you can expose a url for health monitoring or monitor a listening port directly
+
+3. readinessProbe field in k8s pod
+readinessProbe check successful or not decide whether this pod can be accessed by the way of Service. Do not impact the lifetime of pod
+
+# PodPreset function
+> you can use PodPreset to reduce the configuration difficulty
+You can create a PodPreset firstly, then create pod
+An example for PodPreset:
+apiVersion: settings.k8s.io/v1alpha1
+kind: PodPreset
+metadata:
+  name: allow-database
+spec:
+  selector:
+    matchLabels:
+      role: frontend
+  env:
+    - name: DB_PORT
+      value: "6387"
+  volumeMounts:
+    - mountPath: /cache
+      name: cache-volume
+  volumes:
+    - name: cache-volume
+      emptyDir: {}
+> selector is very important => select all pods with label role:frontend
+> if you define multi PodPreset for one pod, then k8s will try to *merge* them. But if any conflict happen, those fields will not be changed
