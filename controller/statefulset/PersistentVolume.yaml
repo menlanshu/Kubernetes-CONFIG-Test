@@ -1,0 +1,23 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: pv-volume
+  label:
+    type: local
+ spec:
+   capacity:
+     storage: 10Gi
+   accessModes:
+     - ReadWriteOnce
+   rbd:
+     monitors:
+     # use kubectl get pods -n rook-ceph to check rook-ceph-mon-开头的POD IP
+     - '10.16.154.78:6789'
+     - '10.16.154.82:6789'
+     - '10.16.154.83:6789'
+     pool: kube
+     image: foo
+     fsType: ext4
+     readOnly: true
+     user: admin
+     keyring: /etc/ceph/keyring

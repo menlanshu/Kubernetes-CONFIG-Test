@@ -1,0 +1,5 @@
+  Normal  ScalingReplicaSet  10m    deployment-controller  Scaled up replica set nginx-deployment-5d59d67564 to 2
+  Normal  ScalingReplicaSet  2m42s  deployment-controller  Scaled up replica set nginx-deployment-69c44dfb78 to 1
+  Normal  ScalingReplicaSet  2m18s  deployment-controller  Scaled down replica set nginx-deployment-5d59d67564 to 1
+  Normal  ScalingReplicaSet  2m18s  deployment-controller  Scaled up replica set nginx-deployment-69c44dfb78 to 2
+  Normal  ScalingReplicaSet  2m17s  deployment-controller  Scaled down replica set nginx-deployment-5d59d67564 to 0
